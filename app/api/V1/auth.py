@@ -1,21 +1,18 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
-from depends import get_current_user, require_admin
+from deps.deps import get_current_user, require_admin, get_db
 from sqlalchemy.orm import Session
 from utils import verify_password
-from app.authS import create_access_token
-from database import get_db
+from authS import create_access_token
 import crud, schemas
 
 api_router = APIRouter()
-
-##### User #####
 
 @api_router.get("/users", response_model=schemas.UserCreate, status_code=status.HTTP_200_OK)
 def get_users(db: Session = Depends(get_db)):
     return crud.get_users(db)
 
-@api_router.post("/users", response_model=schemas.UserCreate, status_code=status.HTTP_201_CREATED)
+@api_router.post("/users", response_model=schemas.UserCreate, status_code=status.HTTP_201_CREATED, dependencies=[Depends(require_admin)])
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     try:
         return crud.create_user(db, user)

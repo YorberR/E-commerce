@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from app.models.product import Product
-from schemas import ProductCreate
+from models.product import Product
+from schemas.product import ProductCreate
 
 def create_product(db: Session, product: ProductCreate):
     db_product = Product(**product.dict())

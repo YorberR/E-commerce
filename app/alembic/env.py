@@ -1,5 +1,6 @@
 from logging.config import fileConfig
 from models import user, category, product
+from models.order import Shopping_cart, Shopping_cart_item, Order, Order_detail
 from db.database import Base, engine
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool

@@ -3,7 +3,7 @@ from models.product import Product
 from schemas.product import ProductCreate
 
 def create_product(db: Session, product: ProductCreate):
-    db_product = Product(**product.dict())
+    db_product = Product(**product.model_dump())
     db.add(db_product)
     db.commit()
     db.refresh(db_product)
@@ -18,7 +18,7 @@ def get_product(db: Session, product_id: int):
 def update_product(db: Session, product_id: int, data: ProductCreate):
     product = get_product(db, product_id)
     if product:
-        for key, value in data.dict().items():
+        for key, value in data.model_dump().items():
             setattr(product, key, value)
         db.commit()
         db.refresh(product)

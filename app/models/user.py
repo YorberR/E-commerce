@@ -10,4 +10,11 @@ class User(Base):
     email = Column(String, unique=True, index=True)
     hashed_password = Column(String)
     is_admin = Column(Boolean, default=False)
-    cart = relationship("Cart", back_populates="usuario", uselist=False)
+    shopping_carts = relationship(
+        "Shopping_cart", back_populates="user", cascade="all, delete-orphan"
+    )
+
+    @property
+    def cart(self):
+        """Atajo al primer carrito del usuario (None si no tiene)."""
+        return self.shopping_carts[0] if self.shopping_carts else None

@@ -1,15 +1,15 @@
 from datetime import datetime, timedelta
-from passlib.context import CryptContext
+import bcrypt
 from jose import JWTError, jwt
 from core.config import settings
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-def create_access_token(sub: str, es_admin: bool):
+def create_access_token(sub: str, es_admin: bool = False):
     expire = datetime.utcnow() + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     data = {"sub": sub, "is_admin": es_admin, "exp": expire}
     token = jwt.encode(data, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
     return token
+
 
 def verify_token(token: str):
     try:
@@ -18,8 +18,18 @@ def verify_token(token: str):
     except JWTError:
         return None
 
-def hash_password(password: str):
-    return pwd_context.hash(password)
 
-def verify_password(password: str, hashed_password: str):
-    return pwd_context.verify(password, hashed_password)
+def _to_bytes(password: str) -> bytes:
+    # bcrypt solo usa los primeros 72 bytes
+    return password.encode("utf-8")[:72]
+
+
+def hash_password(password: str) -> str:
+    return bcrypt.hashpw(_to_bytes(password), bcrypt.gensalt()).decode("utf-8")
+
+
+def verify_password(password: str, hashed_password: str) -> bool:
+    try:
+        return bcrypt.checkpw(_to_bytes(password), hashed_password.encode("utf-8"))
+    except (ValueError, TypeError):
+        return False

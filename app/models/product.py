@@ -11,5 +11,6 @@ class Product(Base):
     price = Column(Float)
     in_stock = Column(Boolean, default=True)
     category_id = Column(Integer, ForeignKey("categories.id"))
+    stock =  Column(Integer, default=0)
 
     categories = relationship("Category", back_populates="products")

@@ -10,8 +10,8 @@ def get_cart(db: Session, user_id: int):
         db.refresh(cart)
     return cart
 
-def add_item_to_cart(db: Session, cart_id: int, product_id: int, quantity: int):
-    item = db.query(Shopping_cart_item).filter(shopping_cart_id=cart_id, product_id=product_id).first()
+def add_item_to_cart(db: Session, cart_id: int, product_id: int, quantity: int = 1):
+    item = db.query(Shopping_cart_item).filter(Shopping_cart_item.cart_id == cart_id, Shopping_cart_item.product_id == product_id).first()
     if item:
         item.quantity += quantity
     else:

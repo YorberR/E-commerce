@@ -16,5 +16,5 @@ class User(Base):
 
     @property
     def cart(self):
-        """Atajo al primer carrito del usuario (None si no tiene)."""
+        """Shortcut to the user's first cart (None if there is none)."""
         return self.shopping_carts[0] if self.shopping_carts else None

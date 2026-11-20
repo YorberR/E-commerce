@@ -1,4 +1,4 @@
-"""Funciones CRUD disponibles como `crud.<nombre>`."""
+"""CRUD functions exposed as `crud.<name>`."""
 
 from crud.user import create_user, get_user, get_user_by_email, get_users
 from crud.category import (

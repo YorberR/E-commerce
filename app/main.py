@@ -19,7 +19,7 @@ app = FastAPI(
         "Portfolio": "https://yorberrojas.me/"
     },
     license_info={
-        "name": "MIT Lincense",
+        "name": "MIT License",
         "url": "https://opensource.org/licenses/MIT"
     }
 )

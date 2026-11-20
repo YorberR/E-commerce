@@ -20,7 +20,7 @@ def verify_token(token: str):
 
 
 def _to_bytes(password: str) -> bytes:
-    # bcrypt solo usa los primeros 72 bytes
+    # bcrypt only uses the first 72 bytes
     return password.encode("utf-8")[:72]
 
 

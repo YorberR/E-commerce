@@ -4,7 +4,7 @@ from models.order import Shopping_cart, Shopping_cart_item, Order, Order_detail
 
 
 def _cart_total(db: Session, cart_id: int) -> float:
-    """Recalcula el total del carrito a partir de sus items actuales."""
+    """Recompute the cart total from its current items."""
     total = 0.0
     items = db.query(Shopping_cart_item).filter_by(shopping_cart_id=cart_id).all()
     for item in items:
@@ -23,11 +23,11 @@ def get_order(db: Session, order_id: int, user_id: int):
 
 
 def create_order(db: Session, user_id: int):
-    """Convierte el carrito del usuario en una orden.
+    """Turn the user's cart into an order.
 
-    Descuenta el stock de cada producto comprado y elimina del carrito solo
-    los items que se pudieron comprar. Si ninguno es comprable lanza
-    ValueError y no deja rastro (rollback).
+    Decrements stock for every purchased product and removes only the items
+    that could be purchased from the cart. If no item can be purchased it
+    raises ValueError and leaves no trace (rollback).
     """
     cart = db.query(Shopping_cart).filter_by(user_id=user_id).first()
     if not cart or not cart.items:
@@ -36,7 +36,7 @@ def create_order(db: Session, user_id: int):
     try:
         order = Order(user_id=user_id, total_price=0)
         db.add(order)
-        db.flush()  # obtiene order.id sin cerrar la transacción
+        db.flush()  # obtains order.id without closing the transaction
 
         total = 0
         purchased = []

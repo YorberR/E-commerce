@@ -19,7 +19,7 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    """Backfill y NOT NULL para products.stock / products.in_stock."""
+    """Backfill and NOT NULL for products.stock / products.in_stock."""
     # Las filas creadas antes de existir la columna quedaron en NULL.
     op.execute("UPDATE products SET stock = 0 WHERE stock IS NULL")
     op.execute("UPDATE products SET in_stock = true WHERE in_stock IS NULL")

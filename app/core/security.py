@@ -1,11 +1,13 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
+
 import bcrypt
 from jose import JWTError, jwt
+
 from core.config import settings
 
 
 def create_access_token(sub: str, es_admin: bool = False):
-    expire = datetime.utcnow() + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    expire = datetime.now(timezone.utc) + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     data = {"sub": sub, "is_admin": es_admin, "exp": expire}
     token = jwt.encode(data, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
     return token

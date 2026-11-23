@@ -1,8 +1,9 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from deps.deps import require_admin, get_db
-from schemas.category import CategoryCreate, CategoryResponse
+
 from crud import category as crud_category
+from deps.deps import get_db, require_admin
+from schemas.category import CategoryCreate, CategoryResponse
 
 api_router = APIRouter()
 
@@ -12,7 +13,12 @@ def list_categories(db: Session = Depends(get_db)):
     return crud_category.get_categories(db)
 
 
-@api_router.post("/", response_model=CategoryResponse, dependencies=[Depends(require_admin)])
+@api_router.post(
+    "/",
+    response_model=CategoryResponse,
+    status_code=status.HTTP_201_CREATED,
+    dependencies=[Depends(require_admin)],
+)
 def add_category(category: CategoryCreate, db: Session = Depends(get_db)):
     return crud_category.create_category(db, category)
 
